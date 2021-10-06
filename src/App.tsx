@@ -1,6 +1,17 @@
 import React, { useEffect, useState } from "react";
+import CssBaseline from "@mui/material/CssBaseline";
 import { domain } from "./config";
 import "./App.css";
+import {
+  Container,
+  Box,
+  Stack,
+  TextField,
+  InputAdornment,
+  Select,
+  MenuItem,
+} from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 
 interface Product {
   id: string;
@@ -14,6 +25,12 @@ interface Product {
   createdAt: string;
   updateAt: string;
 }
+
+const filters = [
+  { id: 0, title: "# Almacén", value: "no_almacen" },
+  { id: 1, title: "Código producto", value: "cod_producto" },
+  { id: 2, title: "Descripción", value: "descripcion" },
+];
 
 function App() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -36,13 +53,46 @@ function App() {
   }, []);
 
   return (
-    <div>
-      {loading
-        ? "...loading"
-        : products.map((product) => (
-            <div key={product.id}>{product.cod_producto}</div>
-          ))}
-    </div>
+    <>
+      <CssBaseline />
+      <Box width="100vw" height="100vh" sx={{ bgcolor: "primary.main" }}>
+        <Container>
+          <Box display="flex" justifyContent="center" pt="10%">
+            <Stack direction="row" spacing={2}>
+              <TextField
+                label="fullWidth"
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <SearchIcon />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={"no_almacen"}
+                label="Filtro"
+                // onChange={handleChange}
+              >
+                {filters.map((filter) => (
+                  <MenuItem key={filter.id} value={filter.value}>
+                    {filter.title}
+                  </MenuItem>
+                ))}
+              </Select>
+            </Stack>
+          </Box>
+
+          {loading
+            ? "...loading"
+            : products.map((product) => (
+                <div key={product.id}>{product.cod_producto}</div>
+              ))}
+        </Container>
+      </Box>
+    </>
   );
 }
 
